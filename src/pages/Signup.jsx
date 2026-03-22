@@ -1,7 +1,30 @@
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import { USER_API_END_POINT } from '../utils/constant'
 import Navbar from '../components/shared/Navbar'
 
 const Signup = () => {
+  const [input, setInput] = useState({ fullname: '', email: '', phoneNumber: '', password: '', role: '' })
+  const navigate = useNavigate()
+
+  const changeHandler = (e) => {
+    setInput({ ...input, [e.target.name]: e.target.value })
+  }
+
+  const submitHandler = async (e) => {
+    e.preventDefault()
+    try {
+      const res = await axios.post(`${USER_API_END_POINT}/register`, input, { withCredentials: true })
+      if (res.data.success) {
+        navigate('/login')
+        alert('Account created! Please login.')
+      }
+    } catch (error) {
+      alert(error.response?.data?.message || 'Signup failed!')
+    }
+  }
+
   return (
     <div>
       <Navbar />
@@ -11,55 +34,42 @@ const Signup = () => {
 
           <div className='mb-4'>
             <label className='block text-gray-600 mb-1'>Full Name</label>
-            <input
-              type='text'
+            <input type='text' name='fullname' value={input.fullname} onChange={changeHandler}
               placeholder='Enter your full name'
-              className='w-full border border-gray-300 px-4 py-2 rounded-lg outline-none focus:border-purple-500'
-            />
+              className='w-full border border-gray-300 px-4 py-2 rounded-lg outline-none focus:border-purple-500' />
           </div>
 
           <div className='mb-4'>
             <label className='block text-gray-600 mb-1'>Email</label>
-            <input
-              type='email'
+            <input type='email' name='email' value={input.email} onChange={changeHandler}
               placeholder='Enter your email'
-              className='w-full border border-gray-300 px-4 py-2 rounded-lg outline-none focus:border-purple-500'
-            />
+              className='w-full border border-gray-300 px-4 py-2 rounded-lg outline-none focus:border-purple-500' />
           </div>
 
           <div className='mb-4'>
             <label className='block text-gray-600 mb-1'>Phone Number</label>
-            <input
-              type='text'
+            <input type='text' name='phoneNumber' value={input.phoneNumber} onChange={changeHandler}
               placeholder='Enter your phone number'
-              className='w-full border border-gray-300 px-4 py-2 rounded-lg outline-none focus:border-purple-500'
-            />
+              className='w-full border border-gray-300 px-4 py-2 rounded-lg outline-none focus:border-purple-500' />
           </div>
 
           <div className='mb-4'>
             <label className='block text-gray-600 mb-1'>Password</label>
-            <input
-              type='password'
+            <input type='password' name='password' value={input.password} onChange={changeHandler}
               placeholder='Enter your password'
-              className='w-full border border-gray-300 px-4 py-2 rounded-lg outline-none focus:border-purple-500'
-            />
+              className='w-full border border-gray-300 px-4 py-2 rounded-lg outline-none focus:border-purple-500' />
           </div>
 
-          <div className='mb-4 flex gap-4'>
+          <div className='mb-6 flex gap-4'>
             <label className='flex items-center gap-2 cursor-pointer'>
-              <input type='radio' name='role' value='student' /> Student
+              <input type='radio' name='role' value='student' onChange={changeHandler} /> Student
             </label>
             <label className='flex items-center gap-2 cursor-pointer'>
-              <input type='radio' name='role' value='recruiter' /> Recruiter
+              <input type='radio' name='role' value='recruiter' onChange={changeHandler} /> Recruiter
             </label>
           </div>
 
-          <div className='mb-6'>
-            <label className='block text-gray-600 mb-1'>Profile Photo</label>
-            <input type='file' className='w-full border border-gray-300 px-4 py-2 rounded-lg' />
-          </div>
-
-          <button className='w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700'>
+          <button onClick={submitHandler} className='w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700'>
             Sign Up
           </button>
 
