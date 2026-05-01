@@ -1,4 +1,4 @@
-const BASE_URL = "https://job-portal-1f95.onrender.com"
+const BASE_URL = "https://job-portal-backend-6f99.onrender.com"
 
 export const USER_API_END_POINT = `${BASE_URL}/api/v1/user`
 export const JOB_API_END_POINT = `${BASE_URL}/api/v1/job`
